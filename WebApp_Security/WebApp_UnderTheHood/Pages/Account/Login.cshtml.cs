@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -13,9 +14,9 @@ namespace WebApp_UnderTheHood.Pages.Account
         public void OnGet()
         {
         }
-        public void OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return;
+            if (!ModelState.IsValid) return Page();
 
             // Verify the credential
             if (Credential.UserName == "admin" && Credential.Password == "password") //generalnie to tak nie hardkodujemy, ale w kursie tak by³o ¿eb uproœciæ :3
@@ -28,7 +29,12 @@ namespace WebApp_UnderTheHood.Pages.Account
 
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");
                 ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal);
+
+                return RedirectToPage("/Index");
             }
+            return Page();
         }
     }
 
