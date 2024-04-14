@@ -11,6 +11,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("MustBelongToHRDepartment", policy => policy.RequireClaim("Department", "HR"));
 });
 
+builder.Services.AddHttpClient("OurWebAPI", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7145/");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
